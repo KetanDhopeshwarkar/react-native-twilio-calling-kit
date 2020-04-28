@@ -36,8 +36,9 @@ public class TwilioCallingKitModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void connect(final ReadableMap props, final Callback success, final Callback error) {
 //        String path = props.getString("path");
-//        Intent intent = new Intent(getCurrentActivity(), PhotoEditorActivity.class);
-//        getCurrentActivity().startActivityForResult(intent, PHOTO_EDITOR_REQUEST);
+        Intent intent = new Intent(getCurrentActivity(), VideoCallingActivity.class);
+        //noinspection ConstantConditions
+        getCurrentActivity().startActivityForResult(intent, 118);
         //callback.invoke("Received numberArgument: " + numberArgument + " stringArgument: " + stringArgument);
     }
 }
