@@ -81,7 +81,7 @@
                 <!--android:contentDescription="@null"-->
                 <!--android:padding="8dp"-->
                 <!--android:scaleType="fitXY"-->
-                <!--android:src="@drawable/ic_phonelink_ring_white_24dp"-->
+                <!--android:src="@drawable/ic_phonelink_ring"-->
                 <!--android:visibility="gone" />-->
 
                 <!--<ImageView-->
