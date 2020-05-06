@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".VideoCallingActivity">
+
+    <include layout="@layout/content_video" />
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/connect_action_fab"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/shape_button_red_background_drawable"
+            android:contentDescription="@null"
+            android:padding="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_call_end" />
+
+        <RelativeLayout
+            android:id="@+id/action_button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/switch_camera_action_fab"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/shape_button_black_background_drawable"
+                android:contentDescription="@null"
+                android:padding="13dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_flip_camera" />
+
+            <ImageView
+                android:id="@+id/turn_speaker_off"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/shape_button_black_background_drawable"
+                android:contentDescription="@null"
+                android:padding="13dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_volume_up"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/turn_speaker_on"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/shape_button_black_background_drawable"
+                android:contentDescription="@null"
+                android:padding="13dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_phonelink_ring_white_24dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/local_video_action_fab"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_button_black_background_drawable"
+                android:contentDescription="@null"
+                android:padding="13dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_videocam" />
+
+            <ImageView
+                android:id="@+id/mute_action_fab"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/shape_button_black_background_drawable"
+                android:contentDescription="@null"
+                android:padding="13dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_mic_on" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
