@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.reactlibrary.ksquad.twilio;
 
 import androidx.annotation.NonNull;
 
@@ -14,7 +14,7 @@ public class TwilioCallingKitPackage implements ReactPackage {
     @NonNull
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
-        return Collections.<NativeModule>singletonList(new TwilioCallingKitModule(reactContext));
+        return Collections.singletonList(new TwilioCallingKitModule(reactContext));
     }
 
     @NonNull

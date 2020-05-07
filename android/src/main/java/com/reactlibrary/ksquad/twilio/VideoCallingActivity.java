@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.reactlibrary.ksquad.twilio;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -557,6 +557,18 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void requestPermissionForCameraAndMicrophone() {
+        /*if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.RECORD_AUDIO)) {
+            Toast.makeText(this,
+                    R.string.permissions_needed,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
+                    CAMERA_MIC_PERMISSION_REQUEST_CODE);
+        }*/
         ActivityCompat.requestPermissions(
                 this,
                 new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},

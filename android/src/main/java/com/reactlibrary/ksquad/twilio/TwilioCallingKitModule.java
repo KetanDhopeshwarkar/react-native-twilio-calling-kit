@@ -1,10 +1,9 @@
-package com.reactlibrary;
+package com.reactlibrary.ksquad.twilio;
 
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
