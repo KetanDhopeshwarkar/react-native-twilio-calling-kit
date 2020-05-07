@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.android.material.snackbar.Snackbar;
 import com.twilio.video.CameraCapturer;
 import com.twilio.video.CameraCapturer.CameraSource;
@@ -46,6 +47,8 @@ import com.twilio.video.Video;
 import com.twilio.video.VideoRenderer;
 import com.twilio.video.VideoTrack;
 import com.twilio.video.VideoView;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -150,7 +153,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("aa ----- onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
@@ -208,7 +210,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             String header = intent.getStringExtra("header");
             String subHeader = intent.getStringExtra("sub_header");
             isVoiceCall = intent.getBooleanExtra("is_voice_call", false);
-            System.out.println("aa ------- isVoiceCall=>" + isVoiceCall);
             headerText.setText("" + header);
             subHeaderText.setText("" + subHeader);
         }
@@ -240,7 +241,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 //            register();
         } else {
 //            register();
-            System.out.println("aa -------- Permission is available");
             connectToRoom();
         }
     }
@@ -333,7 +333,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        System.out.println("aa ----- onRequestPermissionsResult");
         if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
             boolean cameraAndMicPermissionGranted = true;
 
@@ -454,7 +453,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("aa ----- onResume");
 //        registerReceiver();
         /*
          * If the local video track was released when the app was put in the background, recreate.
@@ -492,7 +490,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        System.out.println("aa ----- onPause");
 //        unregisterReceiver();
         /*
          * Release the local video track before going in the background. This ensures that the
@@ -518,7 +515,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        System.out.println("aa ----- onDestroy");
         /*
          * Always disconnect from the room before leaving the Activity to
          * ensure any memory allocated to the Room resource is freed.
@@ -546,7 +542,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private boolean checkPermissionForCameraAndMicrophone() {
-        System.out.println("aa ----- checkPermissionForCameraAndMicrophone");
         int resultCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int resultMic = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         return resultCamera == PackageManager.PERMISSION_GRANTED &&
@@ -554,7 +549,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void requestPermissionForCameraAndMicrophone() {
-        System.out.println("aa ----- requestPermissionForCameraAndMicrophone");
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||
                 ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.RECORD_AUDIO)) {
@@ -570,7 +564,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void createLocalTracks() {
-        System.out.println("aa ----- createLocalTracks");
         // Share your microphone
         localAudioTrack = LocalAudioTrack.create(this, true);
 
@@ -587,7 +580,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private CameraSource getAvailableCameraSource() {
-        System.out.println("aa ----- getAvailableCameraSource");
         return (CameraCapturer.isSourceAvailable(CameraSource.FRONT_CAMERA)) ?
                 (CameraSource.FRONT_CAMERA) :
                 (CameraSource.BACK_CAMERA);
@@ -596,14 +588,12 @@ public class VideoCallingActivity extends AppCompatActivity {
     private void connectToRoom(/*String roomName*/) {
         createLocalTracks();
         intializeUI();
-        System.out.println("aa ----- connectToRoom");
         enableAudioFocus(true);
         enableVolumeControl(true);
 
         ConnectOptions.Builder connectOptionsBuilder = new ConnectOptions.Builder(token)
                 .roomName(roomName);
 
-        System.out.println("aa ----- connectToRoom localAudioTrack=>" + localAudioTrack);
         /*
          * Add local audio track to connect options to share with participants.
          */
@@ -612,7 +602,6 @@ public class VideoCallingActivity extends AppCompatActivity {
                     .audioTracks(Collections.singletonList(localAudioTrack));
         }
 
-        System.out.println("aa ----- connectToRoom localVideoTrack=>" + localVideoTrack);
         /*
          * Add local video track to connect options to share with participants.
          */
@@ -659,7 +648,6 @@ public class VideoCallingActivity extends AppCompatActivity {
      * The initial state when there is no active conversation.
      */
     private void intializeUI() {
-        System.out.println("aa ----- intializeUI");
         connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_videocam));
         connectActionFab.setVisibility(View.VISIBLE);
         connectActionFab.setOnClickListener(connectActionClickListener());
@@ -676,7 +664,6 @@ public class VideoCallingActivity extends AppCompatActivity {
      * The behavior applied to disconnect
      */
     private void setDisconnectBehavior() {
-        System.out.println("aa ----- setDisconnectBehavior");
         connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_call_end));
         connectActionFab.setVisibility(View.VISIBLE);
         connectActionFab.setOnClickListener(disconnectClickListener());
@@ -702,7 +689,6 @@ public class VideoCallingActivity extends AppCompatActivity {
      */
     @SuppressLint("SetTextI18n")
     private void addRemoteParticipant(RemoteParticipant remoteParticipant) {
-        System.out.println("aa ----- addRemoteParticipant");
         /*
          * This app only displays video for one additional participant per Room
          */
@@ -744,14 +730,12 @@ public class VideoCallingActivity extends AppCompatActivity {
      * Set primary view as renderer for participant video track
      */
     private void addRemoteParticipantVideo(VideoTrack videoTrack) {
-        System.out.println("aa ----- addRemoteParticipantVideo");
         moveLocalVideoToThumbnailView();
         primaryVideoView.setMirror(false);
         videoTrack.addRenderer(primaryVideoView);
     }
 
     private void moveLocalVideoToThumbnailView() {
-        System.out.println("aa ----- moveLocalVideoToThumbnailView");
         if (thumbnailVideoView.getVisibility() == View.GONE) {
             thumbnailVideoView.setVisibility(View.VISIBLE);
             if (localVideoTrack != null) {
@@ -769,7 +753,6 @@ public class VideoCallingActivity extends AppCompatActivity {
      */
     @SuppressLint("SetTextI18n")
     private void removeParticipant(RemoteParticipant remoteParticipant) {
-        System.out.println("aa ----- removeParticipant");
         statusTextView.setText("Participant " + remoteParticipant.getIdentity() + " left.");
         if (!remoteParticipant.getIdentity().equals(remoteParticipantIdentity)) {
             return;
@@ -796,12 +779,10 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void removeParticipantVideo(VideoTrack videoTrack) {
-        System.out.println("aa ----- removeParticipantVideo");
         videoTrack.removeRenderer(primaryVideoView);
     }
 
     private void moveLocalVideoToPrimaryView() {
-        System.out.println("aa ----- moveLocalVideoToPrimaryView");
         if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
             localVideoTrack.removeRenderer(thumbnailVideoView);
             thumbnailVideoView.setVisibility(View.GONE);
@@ -817,32 +798,47 @@ public class VideoCallingActivity extends AppCompatActivity {
      */
     @SuppressLint("SetTextI18n")
     private Room.Listener roomListener() {
-        System.out.println("aa ----- roomListener");
         return new Room.Listener() {
             @Override
             public void onConnected(@NonNull Room room) {
-                System.out.println("aa ----- onConnected");
                 localParticipant = room.getLocalParticipant();
                 statusTextView.setText("Connected to " + room.getName());
                 setTitle(room.getName());
 
-                System.out.println("aa ----- onConnected room.getRemoteParticipants()=>" + room.getRemoteParticipants());
                 if (!room.getRemoteParticipants().isEmpty()) {
                     addRemoteParticipant(room.getRemoteParticipants().get(0));
                 }
                 isTimerStart = true;
                 startTimer();
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("status", "CONNECTED");
+                    if (TwilioCallingKitModule.reactContext != null) {
+                        TwilioCallingKitModule.reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("TWILIO_ON_STATE_CHANGE", jsonObject.toString());
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
 
             @Override
             public void onConnectFailure(@NonNull Room room, @NonNull TwilioException e) {
-                System.out.println("aa ----- onConnectFailure");
                 statusTextView.setText("Failed to connect");
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("status", "FAIL_TO_CONNECT");
+                    if (TwilioCallingKitModule.reactContext != null) {
+                        TwilioCallingKitModule.reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("TWILIO_ON_STATE_CHANGE", jsonObject.toString());
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
 
             @Override
             public void onDisconnected(@NonNull Room room, TwilioException e) {
-                System.out.println("aa ----- onDisconnected");
                 localParticipant = null;
                 statusTextView.setText("Disconnected from " + room.getName());
                 reconnectingProgressBar.setVisibility(View.GONE);
@@ -855,23 +851,30 @@ public class VideoCallingActivity extends AppCompatActivity {
                     intializeUI();
                     moveLocalVideoToPrimaryView();
                 }
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("status", "DISCONNECTED");
+                    if (TwilioCallingKitModule.reactContext != null) {
+                        TwilioCallingKitModule.reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("TWILIO_ON_STATE_CHANGE", jsonObject.toString());
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
 
             @Override
             public void onParticipantConnected(@NonNull Room room, @NonNull RemoteParticipant remoteParticipant) {
-                System.out.println("aa ----- onParticipantConnected");
                 addRemoteParticipant(remoteParticipant);
             }
 
             @Override
             public void onParticipantDisconnected(@NonNull Room room, @NonNull RemoteParticipant remoteParticipant) {
-                System.out.println("aa ----- onParticipantDisconnected");
                 removeParticipant(remoteParticipant);
             }
 
             @Override
             public void onRecordingStarted(@NonNull Room room) {
-                System.out.println("aa ----- onRecordingStarted");
                 /*
                  * Indicates when media shared to a Room is being recorded. Note that
                  * recording is only available in our Group Rooms developer preview.
@@ -880,7 +883,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
             @Override
             public void onRecordingStopped(@NonNull Room room) {
-                System.out.println("aa ----- onRecordingStopped");
                 /*
                  * Indicates when media shared to a Room is no longer being recorded. Note that
                  * recording is only available in our Group Rooms developer preview.
@@ -889,14 +891,12 @@ public class VideoCallingActivity extends AppCompatActivity {
 
             @Override
             public void onReconnecting(@NonNull Room room, @NonNull TwilioException exception) {
-                System.out.println("aa ----- onReconnecting");
                 statusTextView.setText("Reconnecting to " + room.getName());
                 reconnectingProgressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onReconnected(@NonNull Room room) {
-                System.out.println("aa ----- onReconnected");
                 statusTextView.setText("Connected to " + room.getName());
                 reconnectingProgressBar.setVisibility(View.GONE);
             }
@@ -905,47 +905,40 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private RemoteParticipant.Listener mediaListener() {
-        System.out.println("aa ----- mediaListener");
         return new RemoteParticipant.Listener() {
             @Override
             public void onAudioTrackPublished(@NonNull RemoteParticipant remoteParticipant,
                                               @NonNull RemoteAudioTrackPublication remoteAudioTrackPublication) {
-                System.out.println("aa ----- onAudioTrackPublished");
                 statusTextView.setText("onAudioTrackPublished");
             }
 
             @Override
             public void onAudioTrackUnpublished(@NonNull RemoteParticipant remoteParticipant,
                                                 @NonNull RemoteAudioTrackPublication remoteAudioTrackPublication) {
-                System.out.println("aa ----- onAudioTrackUnpublished");
                 statusTextView.setText("onAudioTrackPublished");
             }
 
             @Override
             public void onVideoTrackPublished(@NonNull RemoteParticipant remoteParticipant,
                                               @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication) {
-                System.out.println("aa ----- onVideoTrackPublished");
                 statusTextView.setText("onVideoTrackPublished");
             }
 
             @Override
             public void onVideoTrackUnpublished(@NonNull RemoteParticipant remoteParticipant,
                                                 @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication) {
-                System.out.println("aa ----- onVideoTrackUnpublished");
                 statusTextView.setText("onVideoTrackUnpublished");
             }
 
             @Override
             public void onDataTrackPublished(@NonNull RemoteParticipant remoteParticipant,
                                              @NonNull RemoteDataTrackPublication remoteDataTrackPublication) {
-                System.out.println("aa ----- onDataTrackPublished");
                 statusTextView.setText("onDataTrackPublished");
             }
 
             @Override
             public void onDataTrackUnpublished(@NonNull RemoteParticipant remoteParticipant,
                                                @NonNull RemoteDataTrackPublication remoteDataTrackPublication) {
-                System.out.println("aa ----- onDataTrackUnpublished");
                 statusTextView.setText("onDataTrackUnpublished");
             }
 
@@ -953,7 +946,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onAudioTrackSubscribed(@NonNull RemoteParticipant remoteParticipant,
                                                @NonNull RemoteAudioTrackPublication remoteAudioTrackPublication,
                                                @NonNull RemoteAudioTrack remoteAudioTrack) {
-                System.out.println("aa ----- onAudioTrackSubscribed");
                 statusTextView.setText("onAudioTrackSubscribed");
             }
 
@@ -961,7 +953,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onAudioTrackUnsubscribed(@NonNull RemoteParticipant remoteParticipant,
                                                  @NonNull RemoteAudioTrackPublication remoteAudioTrackPublication,
                                                  @NonNull RemoteAudioTrack remoteAudioTrack) {
-                System.out.println("aa ----- onAudioTrackUnsubscribed");
                 statusTextView.setText("onAudioTrackUnsubscribed");
             }
 
@@ -969,7 +960,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onAudioTrackSubscriptionFailed(@NonNull RemoteParticipant remoteParticipant,
                                                        @NonNull RemoteAudioTrackPublication remoteAudioTrackPublication,
                                                        @NonNull TwilioException twilioException) {
-                System.out.println("aa ----- onAudioTrackSubscriptionFailed");
                 statusTextView.setText("onAudioTrackSubscriptionFailed");
             }
 
@@ -977,7 +967,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onVideoTrackSubscribed(@NonNull RemoteParticipant remoteParticipant,
                                                @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication,
                                                @NonNull RemoteVideoTrack remoteVideoTrack) {
-                System.out.println("aa ----- onVideoTrackSubscribed");
                 statusTextView.setText("onVideoTrackSubscribed");
                 addRemoteParticipantVideo(remoteVideoTrack);
             }
@@ -986,7 +975,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onVideoTrackUnsubscribed(@NonNull RemoteParticipant remoteParticipant,
                                                  @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication,
                                                  @NonNull RemoteVideoTrack remoteVideoTrack) {
-                System.out.println("aa ----- onVideoTrackUnsubscribed");
                 statusTextView.setText("onVideoTrackUnsubscribed");
                 removeParticipantVideo(remoteVideoTrack);
             }
@@ -995,7 +983,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onVideoTrackSubscriptionFailed(@NonNull RemoteParticipant remoteParticipant,
                                                        @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication,
                                                        @NonNull TwilioException twilioException) {
-                System.out.println("aa ----- onVideoTrackSubscriptionFailed");
                 statusTextView.setText("onVideoTrackSubscriptionFailed");
                 Snackbar.make(connectActionFab,
                         String.format("Failed to subscribe to %s video track",
@@ -1008,7 +995,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onDataTrackSubscribed(@NonNull RemoteParticipant remoteParticipant,
                                               @NonNull RemoteDataTrackPublication remoteDataTrackPublication,
                                               @NonNull RemoteDataTrack remoteDataTrack) {
-                System.out.println("aa ----- onDataTrackSubscribed");
                 statusTextView.setText("onDataTrackSubscribed");
             }
 
@@ -1016,7 +1002,6 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onDataTrackUnsubscribed(@NonNull RemoteParticipant remoteParticipant,
                                                 @NonNull RemoteDataTrackPublication remoteDataTrackPublication,
                                                 @NonNull RemoteDataTrack remoteDataTrack) {
-                System.out.println("aa ----- onDataTrackUnsubscribed");
                 statusTextView.setText("onDataTrackUnsubscribed");
             }
 
@@ -1024,32 +1009,27 @@ public class VideoCallingActivity extends AppCompatActivity {
             public void onDataTrackSubscriptionFailed(@NonNull RemoteParticipant remoteParticipant,
                                                       @NonNull RemoteDataTrackPublication remoteDataTrackPublication,
                                                       @NonNull TwilioException twilioException) {
-                System.out.println("aa ----- onDataTrackSubscriptionFailed");
                 statusTextView.setText("onDataTrackSubscriptionFailed");
             }
 
             @Override
             public void onAudioTrackEnabled(@NonNull RemoteParticipant remoteParticipant,
                                             @NonNull RemoteAudioTrackPublication remoteAudioTrackPublication) {
-                System.out.println("aa ----- onAudioTrackEnabled");
             }
 
             @Override
             public void onAudioTrackDisabled(@NonNull RemoteParticipant remoteParticipant,
                                              @NonNull RemoteAudioTrackPublication remoteAudioTrackPublication) {
-                System.out.println("aa ----- onAudioTrackDisabled");
             }
 
             @Override
             public void onVideoTrackEnabled(@NonNull RemoteParticipant remoteParticipant,
                                             @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication) {
-                System.out.println("aa ----- onVideoTrackEnabled");
             }
 
             @Override
             public void onVideoTrackDisabled(@NonNull RemoteParticipant remoteParticipant,
                                              @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication) {
-                System.out.println("aa ----- onVideoTrackDisabled");
             }
         };
     }
@@ -1079,7 +1059,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     private View.OnClickListener disconnectClickListener() {
         return v -> {
-            System.out.println("aa ----- disconnectClickListener");
             /*
              * Disconnect from room
              */
@@ -1092,10 +1071,7 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private View.OnClickListener connectActionClickListener() {
-        return v -> {
-            System.out.println("aa ----- connectActionClickListener");
-            connectToRoom();
-        };
+        return v -> connectToRoom();
     }
 
 //    private DialogInterface.OnClickListener cancelConnectDialogClickListener() {
@@ -1107,7 +1083,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     private View.OnClickListener switchCameraClickListener() {
         return v -> {
-            System.out.println("aa ----- switchCameraClickListener");
             if (cameraCapturer != null) {
                 CameraSource cameraSource = cameraCapturer.getCameraSource();
                 cameraCapturer.switchCamera();
@@ -1122,7 +1097,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     private View.OnClickListener localVideoClickListener() {
         return v -> {
-            System.out.println("aa ----- localVideoClickListener");
             /*
              * Enable/disable the local video track
              */
@@ -1146,7 +1120,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     private View.OnClickListener muteClickListener() {
         return v -> {
-            System.out.println("aa ----- muteClickListener");
             /*
              * Enable/disable the local audio track. The results of this operation are
              * signaled to other Participants in the same Room. When an audio track is
@@ -1165,7 +1138,6 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     private View.OnClickListener menuClickListener() {
         return v -> {
-            System.out.println("aa ----- menuClickListener");
             int i = v.getId();
             /*if (i == R.id.menu_turn_speaker_on || i == R.id.menu_turn_speaker_off) {
                 boolean expectedSpeakerPhoneState = !audioManager.isSpeakerphoneOn();
@@ -1177,7 +1149,8 @@ public class VideoCallingActivity extends AppCompatActivity {
                     turnSpeakerOffMenuItem.setVisibility(View.GONE);
                     turnSpeakerOnMenuItem.setVisibility(View.VISIBLE);
                 }
-            } else */if (i == R.id.turn_speaker_on || i == R.id.turn_speaker_off) {
+            } else */
+            if (i == R.id.turn_speaker_on || i == R.id.turn_speaker_off) {
                 boolean expectedSpeakerPhoneState = !audioManager.isSpeakerphoneOn();
                 audioManager.setSpeakerphoneOn(expectedSpeakerPhoneState);
                 if (expectedSpeakerPhoneState) {
@@ -1192,7 +1165,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void enableAudioFocus(boolean focus) {
-        System.out.println("aa ----- enableAudioFocus=>" + focus);
         if (focus) {
             previousAudioMode = audioManager.getMode();
             // Request audio focus before making any device switch.
@@ -1211,7 +1183,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void requestAudioFocus() {
-        System.out.println("aa ----- requestAudioFocus");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             AudioAttributes playbackAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
@@ -1233,7 +1204,6 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void enableVolumeControl(boolean volumeControl) {
-        System.out.println("aa ----- enableVolumeControl=>" + volumeControl);
         if (volumeControl) {
             /*
              * Enable changing the volume using the up/down keys during a conversation

@@ -3,6 +3,8 @@ package com.reactlibrary;
 import android.app.Activity;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.Callback;
@@ -13,11 +15,11 @@ import com.facebook.react.bridge.ReadableMap;
 
 public class TwilioCallingKitModule extends ReactContextBaseJavaModule {
 
-    private final ReactApplicationContext reactContext;
+    protected static ReactApplicationContext reactContext;
 
     public TwilioCallingKitModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
+        TwilioCallingKitModule.reactContext = reactContext;
         ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
 
             @Override
@@ -28,6 +30,7 @@ public class TwilioCallingKitModule extends ReactContextBaseJavaModule {
         reactContext.addActivityEventListener(mActivityEventListener);
     }
 
+    @NonNull
     @Override
     public String getName() {
         return "TwilioCallingKit";
@@ -43,6 +46,5 @@ public class TwilioCallingKitModule extends ReactContextBaseJavaModule {
         intent.putExtra("is_voice_call", props.getBoolean("is_voice_call"));
         //noinspection ConstantConditions
         getCurrentActivity().startActivityForResult(intent, 118);
-        //callback.invoke("Received numberArgument: " + numberArgument + " stringArgument: " + stringArgument);
     }
 }
