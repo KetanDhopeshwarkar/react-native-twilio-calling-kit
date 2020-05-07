@@ -1,12 +1,9 @@
 package com.reactlibrary;
 
-import android.app.Activity;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import com.facebook.react.bridge.ActivityEventListener;
-import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -15,19 +12,13 @@ import com.facebook.react.bridge.ReadableMap;
 
 public class TwilioCallingKitModule extends ReactContextBaseJavaModule {
 
+    @SuppressWarnings("WeakerAccess")
     protected static ReactApplicationContext reactContext;
 
+    @SuppressWarnings("WeakerAccess")
     public TwilioCallingKitModule(ReactApplicationContext reactContext) {
         super(reactContext);
         TwilioCallingKitModule.reactContext = reactContext;
-        ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
-
-            @Override
-            public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
-
-            }
-        };
-        reactContext.addActivityEventListener(mActivityEventListener);
     }
 
     @NonNull
@@ -36,8 +27,9 @@ public class TwilioCallingKitModule extends ReactContextBaseJavaModule {
         return "TwilioCallingKit";
     }
 
+    @SuppressWarnings("unused")
     @ReactMethod
-    public void connect(final ReadableMap props, final Callback success, final Callback error) {
+    public void connect(final ReadableMap props) {
         Intent intent = new Intent(getCurrentActivity(), VideoCallingActivity.class);
         intent.putExtra("token", props.getString("token"));
         intent.putExtra("room_name", props.getString("room_name"));
@@ -45,6 +37,6 @@ public class TwilioCallingKitModule extends ReactContextBaseJavaModule {
         intent.putExtra("sub_header", props.getString("sub_header"));
         intent.putExtra("is_voice_call", props.getBoolean("is_voice_call"));
         //noinspection ConstantConditions
-        getCurrentActivity().startActivityForResult(intent, 118);
+        getCurrentActivity().startActivity(intent);
     }
 }

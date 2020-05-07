@@ -105,8 +105,8 @@ public class VideoCallingActivity extends AppCompatActivity {
     private VideoView primaryVideoView;
     private VideoView thumbnailVideoView;
 
-    //    private boolean isReceiverRegistered;
-    //private LocalBroadcastReceiver localBroadcastReceiver;
+//    private boolean isReceiverRegistered;
+//    private LocalBroadcastReceiver localBroadcastReceiver;
 //    private NotificationManager notificationManager;
 //    private Intent cachedVideoNotificationIntent;
 
@@ -119,11 +119,12 @@ public class VideoCallingActivity extends AppCompatActivity {
     private LocalAudioTrack localAudioTrack;
     private LocalVideoTrack localVideoTrack;
     private ImageView connectActionFab;
+    private ImageView backButton;
     private ImageView switchCameraActionFab;
     private ImageView localVideoActionFab;
     private ImageView muteActionFab;
     private ProgressBar reconnectingProgressBar;
-    //    private AlertDialog alertDialog;
+//    private AlertDialog alertDialog;
     private AudioManager audioManager;
     private String remoteParticipantIdentity;
 //    private ImageView turnSpeakerOnMenuItem;
@@ -168,6 +169,7 @@ public class VideoCallingActivity extends AppCompatActivity {
         timerText = findViewById(R.id.timer_text);
 
         connectActionFab = findViewById(R.id.connect_action_fab);
+        backButton = findViewById(R.id.back_button);
         switchCameraActionFab = findViewById(R.id.switch_camera_action_fab);
         localVideoActionFab = findViewById(R.id.local_video_action_fab);
         muteActionFab = findViewById(R.id.mute_action_fab);
@@ -182,7 +184,7 @@ public class VideoCallingActivity extends AppCompatActivity {
         /*
          * Hide the connect button until we successfully register with Twilio Notify
          */
-        connectActionFab.setVisibility(View.GONE);
+        //connectActionFab.setVisibility(View.GONE);
 
         /*
          * Enable changing the volume using the up/down keys during a conversation
@@ -648,9 +650,9 @@ public class VideoCallingActivity extends AppCompatActivity {
      * The initial state when there is no active conversation.
      */
     private void intializeUI() {
-        connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_videocam));
-        connectActionFab.setVisibility(View.VISIBLE);
-        connectActionFab.setOnClickListener(connectActionClickListener());
+        //connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_videocam));
+        //connectActionFab.setVisibility(View.VISIBLE);
+        //connectActionFab.setOnClickListener(connectActionClickListener());
         switchCameraActionFab.setOnClickListener(switchCameraClickListener());
         localVideoActionFab.setOnClickListener(localVideoClickListener());
         muteActionFab.setOnClickListener(muteClickListener());
@@ -664,9 +666,9 @@ public class VideoCallingActivity extends AppCompatActivity {
      * The behavior applied to disconnect
      */
     private void setDisconnectBehavior() {
-        connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_call_end));
-        connectActionFab.setVisibility(View.VISIBLE);
+//        connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_call_end));
         connectActionFab.setOnClickListener(disconnectClickListener());
+        backButton.setOnClickListener(disconnectClickListener());
     }
 
     /*
@@ -835,6 +837,7 @@ public class VideoCallingActivity extends AppCompatActivity {
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
+                VideoCallingActivity.this.finish();
             }
 
             @Override
@@ -861,6 +864,7 @@ public class VideoCallingActivity extends AppCompatActivity {
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
+                VideoCallingActivity.this.finish();
             }
 
             @Override
@@ -1070,9 +1074,9 @@ public class VideoCallingActivity extends AppCompatActivity {
         };
     }
 
-    private View.OnClickListener connectActionClickListener() {
-        return v -> connectToRoom();
-    }
+//    private View.OnClickListener connectActionClickListener() {
+//        return v -> connectToRoom();
+//    }
 
 //    private DialogInterface.OnClickListener cancelConnectDialogClickListener() {
 //        return (dialog, which) -> {
