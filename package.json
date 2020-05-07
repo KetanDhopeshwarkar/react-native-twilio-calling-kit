@@ -1,7 +1,7 @@
 {
   "name": "react-native-twilio-calling-kit",
   "title": "React Native Twilio Calling Kit",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "TODO",
   "main": "index.js",
   "scripts": {
