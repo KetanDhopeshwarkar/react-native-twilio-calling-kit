@@ -124,10 +124,10 @@ public class VideoCallingActivity extends AppCompatActivity {
     private ImageView localVideoActionFab;
     private ImageView muteActionFab;
     private ProgressBar reconnectingProgressBar;
-//    private AlertDialog alertDialog;
+    //    private AlertDialog alertDialog;
     private AudioManager audioManager;
     private String remoteParticipantIdentity;
-//    private ImageView turnSpeakerOnMenuItem;
+    //    private ImageView turnSpeakerOnMenuItem;
 //    private ImageView turnSpeakerOffMenuItem;
 //    private ImageView dummyMenuVoiceCall;
     private ImageView turnSpeakerOff;
@@ -146,6 +146,7 @@ public class VideoCallingActivity extends AppCompatActivity {
     private RelativeLayout actionButtonLayout;
     private boolean isVoiceCall = false;
     private ImageView backgroundView;
+    private View voiceBackgroundView;
     private long time;
     private boolean isTimerStart = false;
     @SuppressLint("SimpleDateFormat")
@@ -180,6 +181,7 @@ public class VideoCallingActivity extends AppCompatActivity {
         turnSpeakerOff = findViewById(R.id.turn_speaker_off);
         reconnectingProgressBar = findViewById(R.id.reconnecting_progress_bar);
         backgroundView = findViewById(R.id.background_view);
+        voiceBackgroundView = findViewById(R.id.voice_background_view);
 
         /*
          * Hide the connect button until we successfully register with Twilio Notify
@@ -268,6 +270,8 @@ public class VideoCallingActivity extends AppCompatActivity {
 //        dummyMenuVoiceCall.setVisibility(View.INVISIBLE);
         turnSpeakerOff.setVisibility(View.VISIBLE);
         turnSpeakerOn.setVisibility(View.GONE);
+        voiceBackgroundView.setVisibility(View.VISIBLE);
+        backgroundView.setVisibility(View.GONE);
     }
 
     private void renderVideoCallUI() {
@@ -287,6 +291,8 @@ public class VideoCallingActivity extends AppCompatActivity {
             dummyMenuVoiceCall.setVisibility(View.GONE);*/
             turnSpeakerOff.setVisibility(View.GONE);
             turnSpeakerOn.setVisibility(View.GONE);
+            voiceBackgroundView.setVisibility(View.GONE);
+            backgroundView.setVisibility(View.VISIBLE);
             new Handler().postDelayed(() -> {
                 slideDown(headerLayout, false);
                 slideDown(buttonLayout, true);
@@ -551,18 +557,10 @@ public class VideoCallingActivity extends AppCompatActivity {
     }
 
     private void requestPermissionForCameraAndMicrophone() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.RECORD_AUDIO)) {
-            Toast.makeText(this,
-                    R.string.permissions_needed,
-                    Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
-                    CAMERA_MIC_PERMISSION_REQUEST_CODE);
-        }
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
+                CAMERA_MIC_PERMISSION_REQUEST_CODE);
     }
 
     private void createLocalTracks() {

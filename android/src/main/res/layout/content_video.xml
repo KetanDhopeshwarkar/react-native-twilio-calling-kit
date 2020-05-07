@@ -8,12 +8,12 @@
     android:keepScreenOn="true"
     tools:showIn="@layout/activity_video">
 
-
     <com.twilio.video.VideoView
         android:id="@+id/primary_video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center" />
+
 
     <ProgressBar
         android:id="@+id/reconnecting_progress_bar"
@@ -31,6 +31,13 @@
         android:contentDescription="@null"
         android:scaleType="fitXY"
         android:src="@drawable/shape_background_drawable" />
+
+    <View
+        android:id="@+id/voice_background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B0000000"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/header_layout"
@@ -159,9 +166,7 @@
                 app:tviOverlaySurface="true" />
 
         </RelativeLayout>
-
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/status_textview"
