@@ -2,15 +2,15 @@
   "name": "react-native-twilio-calling-kit",
   "title": "React Native Twilio Calling Kit",
   "version": "1.0.0",
-  "description": "TODO",
+  "description": "This plugin is used to connect twilio video call.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_account/react-native-twilio-calling-kit.git",
-    "baseUrl": "https://github.com/github_account/react-native-twilio-calling-kit"
+    "url": "git+https://github.com/KetanDhopeshwarkar/react-native-twilio-calling-kit",
+    "baseUrl": "https://github.com/KetanDhopeshwarkar/react-native-twilio-calling-kit"
   },
   "keywords": [
     "react-native"
@@ -27,7 +27,7 @@
     "react-native": "^0.61.5"
   },
   "bugs": {
-    "url": "https://github.com/github_account/react-native-twilio-calling-kit/issues"
+    "url": "https://github.com/KetanDhopeshwarkar/react-native-twilio-calling-kit/issues"
   },
-  "homepage": "https://github.com/github_account/react-native-twilio-calling-kit#readme"
+  "homepage": "https://github.com/KetanDhopeshwarkar/react-native-twilio-calling-kit#readme"
 }
