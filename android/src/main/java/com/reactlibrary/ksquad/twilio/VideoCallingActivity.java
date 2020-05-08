@@ -272,6 +272,7 @@ public class VideoCallingActivity extends AppCompatActivity {
         turnSpeakerOn.setVisibility(View.GONE);
         voiceBackgroundView.setVisibility(View.VISIBLE);
         backgroundView.setVisibility(View.GONE);
+        primaryVideoView.setVisibility(View.INVISIBLE);
     }
 
     private void renderVideoCallUI() {
@@ -298,19 +299,30 @@ public class VideoCallingActivity extends AppCompatActivity {
                 slideDown(buttonLayout, true);
                 backgroundView.setOnClickListener(this::onSlideViewButtonClick);
             }, 10000);
+            primaryVideoView.setVisibility(View.VISIBLE);
+            if (room != null && !room.getRemoteParticipants().isEmpty()) {
+                thumbnailVideoView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     // slide the view from its current position to below itself
     public void slideDown(View view, boolean isBottomView) {
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                isBottomView ? view.getHeight() : -1 * animatedHeaderView.getHeight()); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
+        try {
+            TranslateAnimation animate = new TranslateAnimation(
+                    0,                 // fromXDelta
+                    0,                 // toXDelta
+                    0,                 // fromYDelta
+                    isBottomView ? view.getHeight() : -1 * animatedHeaderView.getHeight()); // toYDelta
+            animate.setDuration(500);
+            animate.setFillAfter(true);
+            view.startAnimation(animate);
+            if (isBottomView) {
+                new Handler().postDelayed(() -> buttonLayout.setVisibility(View.GONE), 500);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // slide the view from below itself to the current position
@@ -470,7 +482,11 @@ public class VideoCallingActivity extends AppCompatActivity {
                 cameraCapturer != null) {
             localVideoTrack = LocalVideoTrack.create(this, true, cameraCapturer);
             if (localVideoTrack != null) {
-                localVideoTrack.enable(!isVoiceCall);
+                if (isVoiceCall) {
+                    localVideoTrack.enable(false);
+                } else {
+                    localVideoTrack.enable(switchCameraActionFab.getVisibility() == View.VISIBLE);
+                }
                 localVideoTrack.addRenderer(localVideoView);
             }
 
@@ -749,10 +765,15 @@ public class VideoCallingActivity extends AppCompatActivity {
 
     private void moveLocalVideoToThumbnailView() {
         if (thumbnailVideoView.getVisibility() == View.GONE) {
-            thumbnailVideoView.setVisibility(View.VISIBLE);
+            if (!isVoiceCall) {
+                thumbnailVideoView.setVisibility(View.VISIBLE);
+            }
             if (localVideoTrack != null) {
                 localVideoTrack.removeRenderer(primaryVideoView);
                 localVideoTrack.addRenderer(thumbnailVideoView);
+                if (isVoiceCall) {
+                    localVideoTrack.enable(false);
+                }
             }
             localVideoView = thumbnailVideoView;
             thumbnailVideoView.setMirror(cameraCapturer.getCameraSource() ==
