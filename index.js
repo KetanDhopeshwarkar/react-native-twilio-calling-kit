@@ -5,7 +5,7 @@ const { TwilioCallingKit } = NativeModules;
 class RNTwilioCallingKit extends PureComponent {
 
     componentWillUnmount = () => {
-        if (this.eventEmitter) {
+        if (this?.eventEmitter) {
             this.eventEmitter.remove();
             this.eventEmitter = null;
         }
@@ -16,8 +16,10 @@ class RNTwilioCallingKit extends PureComponent {
             .addListener('TWILIO_ON_STATE_CHANGE', (data) => {
                 let result = Platform.OS === 'ios' ? data : JSON.parse(data);
                 if (result.status == 'DISCONNECTED' || result.status == 'FAIL_TO_CONNECT') {
-                    this.eventEmitter.remove();
-                    this.eventEmitter = null;
+                    if (this?.eventEmitter) {
+                        this.eventEmitter.remove();
+                        this.eventEmitter = null;
+                    }
                 }
                 if (callback) {
                     callback(result);
