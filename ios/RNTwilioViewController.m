@@ -53,21 +53,15 @@ API_AVAILABLE(ios(10.0))
 // `TVIVideoView` created from a storyboard
 @property (weak, nonatomic) IBOutlet TVIVideoView *previewView;
 
-@property (nonatomic, weak) IBOutlet UIView *connectButton;
 @property (nonatomic, weak) IBOutlet UIButton *disconnectButton;
-@property (nonatomic, weak) IBOutlet UILabel *messageLabel;
 @property (nonatomic, weak) IBOutlet UIButton *micButton;
-@property (nonatomic, weak) IBOutlet UILabel *roomLabel;
-@property (nonatomic, weak) IBOutlet UILabel *roomLine;
 @property (weak, nonatomic) IBOutlet UIButton *flipButton;
-@property (weak, nonatomic) IBOutlet UIButton *flashButton;
+//@property (weak, nonatomic) IBOutlet UIButton *flashButton;
 @property (weak, nonatomic) IBOutlet UIButton *videoButton;
-@property (weak, nonatomic) IBOutlet UIButton *scheduleCall;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UILabel *callDurationTimerLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shopNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shopCategoryLabel;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewTopPaddingConstraint;
 @property (weak, nonatomic) IBOutlet UIView *topBackgroundView;
 @property (weak, nonatomic) IBOutlet UIView *bottomBackgroundView;
 @property (weak, nonatomic) IBOutlet UIImageView *shopPosterImage;
@@ -76,6 +70,12 @@ API_AVAILABLE(ios(10.0))
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *stackViewBottomConstraint;//20
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topBackgroundViewTopConstraint;
 @property (weak, nonatomic) IBOutlet UIStackView *bottomControllsStackView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewTrailingConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewTopPaddingConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewLeadingConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewLBottomConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewWidthConstraint;
 
 @end
 
@@ -149,28 +149,23 @@ API_AVAILABLE(ios(10.0))
 //    self.accessToken = @"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzg5NjkwNTg2NGVjMTU3MTE4NjdiZTUzODAxMWM4MDY4LTE1ODg3NzI5MjkiLCJpc3MiOiJTSzg5NjkwNTg2NGVjMTU3MTE4NjdiZTUzODAxMWM4MDY4Iiwic3ViIjoiQUM1MTI3OGMwOTc2NmRhMGI5NzJhZWUzM2MwOWRhN2RjMyIsImV4cCI6MTU4ODc3NjUyOSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiVHVzaGFyIiwidmlkZW8iOnsicm9vbSI6IlRlc3QxMjMifX19.H_nYLnj1_eBM2Oa7dXEU-p3UqqQvICxAMGm3QQzpNug";
 //    self.accessToken = @"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzg5NjkwNTg2NGVjMTU3MTE4NjdiZTUzODAxMWM4MDY4LTE1ODg3NzI4ODkiLCJpc3MiOiJTSzg5NjkwNTg2NGVjMTU3MTE4NjdiZTUzODAxMWM4MDY4Iiwic3ViIjoiQUM1MTI3OGMwOTc2NmRhMGI5NzJhZWUzM2MwOWRhN2RjMyIsImV4cCI6MTU4ODc3NjQ4OSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiQW1vbCIsInZpZGVvIjp7InJvb20iOiJUZXN0MTIzIn19fQ.3M4XWmm8Xhj_nXQqOsQNiZuzTHKXEu_pSZWTyOLxlMI";
     
-    if(!self.isVoiceCall){
-        // Preview our local camera track in the local video preview view.
-        [self startPreview];
-    }
+    
+       if(!self.isVoiceCall){
+           // Preview our local camera track in the local video preview view.
+           [self startPreview];
+       }
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleUIControllVisibility)];
     [self.view addGestureRecognizer:tap];
 }
 
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
-    
+    __weak typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self doConnect];
+        [weakSelf doConnect];
     });
-}
-
-
-
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:YES];
-        
 }
 
 - (void)viewDidLayoutSubviews{
@@ -253,7 +248,6 @@ API_AVAILABLE(ios(10.0))
     self.speakerButton.layer.cornerRadius = 25;
     self.disconnectButton.layer.cornerRadius = 35;
     self.callDurationTimerLabel.layer.cornerRadius = 14.5;
-    self.previewView.layer.cornerRadius = 5;
     self.shopPosterImage.layer.cornerRadius = self.shopPosterImage.frame.size.height/2;
     
     if ( !([[self.props objectForKey:@"header"] isKindOfClass:[NSNull class]] || [self.props objectForKey:@"header"] == nil || [[self.props objectForKey:@"header"] isEqualToString:@""]) )
@@ -300,7 +294,6 @@ API_AVAILABLE(ios(10.0))
     } else {
         self.topBackgroundView.hidden = YES;
         self.bottomBackgroundView.hidden = YES;
-        self.previewView.hidden = NO;
         self.flipButton.hidden = NO;
         self.speakerButton.hidden = YES;
         self.shopPosterImage.hidden = YES;
@@ -317,8 +310,9 @@ API_AVAILABLE(ios(10.0))
     self.stopWatchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/10.0 target:self selector:@selector(stopWatchReading) userInfo:nil repeats:YES];
     [self setupAutohideTimer];
     
-//    [TwilioCallingKit sendEventToJS:@"CONNECTED"];
-   // [[NSNotificationCenter defaultCenter] postNotificationName:@"DataUpdated" object:@"CONNECTED"];
+    if (!self.isVoiceCall) {
+        [self transformPreviewView];
+    }
     
     NSDictionary *userInfo =
     [NSDictionary dictionaryWithObject:@"CONNECTED" forKey:@"event"];
@@ -326,12 +320,28 @@ API_AVAILABLE(ios(10.0))
                            @"DataUpdated" object:nil userInfo:userInfo];
 }
 
+- (void)transformPreviewView {
+    self.previewView.layer.cornerRadius = 5;
+    [UIView animateWithDuration:0.6
+        animations:^{
+            self.previewViewTopPaddingConstraint.constant = 130;
+            self.previewViewTrailingConstraint.constant = 20;
+//            self.previewViewLeadingConstraint.priority = 998;
+//            self.previewViewLBottomConstraint.priority = 998;
+        
+            self.previewViewLeadingConstraint.active = false;
+            self.previewViewLBottomConstraint.active = false;
+            [self.view layoutIfNeeded]; // Called on parent view
+        }];
+    
+}
+
 - (void)setupAutohideTimer {
     if (self.hideUITimer) {
         [self.hideUITimer invalidate];
         self.hideUITimer = nil;
     }
-    self.hideUITimer = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(autoHideUIControllAfterConnect) userInfo:nil repeats:NO];
+    self.hideUITimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(autoHideUIControllAfterConnect) userInfo:nil repeats:NO];
     
 }
 
@@ -380,7 +390,7 @@ API_AVAILABLE(ios(10.0))
 //        self.backButtonTopConstraint.constant = visibility ? 16 : -200;
 //        self.topBackgroundViewTopConstraint.constant = visibility ? 0 : -200;
 //        self.stackViewBottomConstraint.constant = visibility ? 20 : -200;
-        self.previewViewTopPaddingConstraint.constant = visibility ? 86 : 50;
+//        self.previewViewTopPaddingConstraint.constant = visibility ? 86 : 50;
         [self.view layoutIfNeeded]; // Called on parent view
     }];
     
@@ -389,7 +399,7 @@ API_AVAILABLE(ios(10.0))
 
 - (void)autoHideUIControllAfterConnect {
     if (!self.isConnected) {
-        self.previewViewTopPaddingConstraint.constant = 86;
+//        self.previewViewTopPaddingConstraint.constant = 86;
         return;
     }
     BOOL visibility = NO;
@@ -417,7 +427,7 @@ API_AVAILABLE(ios(10.0))
 //        self.backButtonTopConstraint.constant = visibility ? 16 : -200;
 //        self.topBackgroundViewTopConstraint.constant = visibility ? 0 : -200;
 //        self.stackViewBottomConstraint.constant = visibility ? 20 : -200;
-        self.previewViewTopPaddingConstraint.constant = visibility ? 86 : 50;
+//        self.previewViewTopPaddingConstraint.constant = visibility ? 86 : 50;
         [self.view layoutIfNeeded]; // Called on parent view
     }];
 }
@@ -549,7 +559,7 @@ API_AVAILABLE(ios(10.0))
         self.previewView.hidden = YES;
         return;
     }
-
+  
     AVCaptureDevice *frontCamera = [TVICameraSource captureDeviceForPosition:AVCaptureDevicePositionFront];
     AVCaptureDevice *backCamera = [TVICameraSource captureDeviceForPosition:AVCaptureDevicePositionBack];
 
@@ -690,8 +700,7 @@ API_AVAILABLE(ios(10.0))
     
     // `TVIVideoView` supports UIViewContentModeScaleToFill, UIViewContentModeScaleAspectFill and UIViewContentModeScaleAspectFit
     // UIViewContentModeScaleAspectFit is the default mode when you create `TVIVideoView` programmatically.
-    self.remoteView.contentMode = UIViewContentModeScaleAspectFill;
-    
+    remoteView.contentMode = UIViewContentModeScaleAspectFill;
     [self.view insertSubview:remoteView atIndex:0];
     self.remoteView = remoteView;
     
@@ -742,14 +751,6 @@ API_AVAILABLE(ios(10.0))
 
 - (void)logMessage:(NSString *)msg {
     NSLog(@"%@", msg);
-    self.messageLabel.text = msg;
-}
-
-#pragma mark - UITextFieldDelegate
-
-- (BOOL)testFieldShouldReturn:(UITextField *)textField {
-    [self connectButtonPressed:textField];
-    return YES;
 }
 
 #pragma mark - TVIRoomDelegate

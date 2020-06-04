@@ -51,7 +51,11 @@ RCT_EXPORT_METHOD(connect:(nonnull NSDictionary *)props)
         UINavigationController *rootViewController = ((UINavigationController*) app.window.rootViewController);
         
         if (rootViewController.presentedViewController) {
-            [rootViewController.presentedViewController presentViewController:videoController animated:YES completion:nil];
+            [rootViewController.presentedViewController presentViewController:videoController animated:NO completion:nil];
+            
+//            [rootViewController.presentedViewController dismissViewControllerAnimated:NO completion:^{
+//                [rootViewController presentViewController:videoController animated:NO completion:nil];
+//            }];
             return;
         }
         
